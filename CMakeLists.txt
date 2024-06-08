@@ -1,5 +1,8 @@
 cmake_minimum_required(VERSION 3.0.0...3.24 FATAL_ERROR)
-project(DawnSingleLib VERSION 1.0.0)
+project(DawnSingleLib
+  DESCRIPTION "Builds Dawn as a single static lib"
+  VERSION 0.0.1
+)
 
 message(STATUS "Using Dawn backend for WebGPU")
 
@@ -19,13 +22,12 @@ function(get_all_targets _result _dir)
 endfunction()
 
 if (EMSCRIPTEN)
+  # target_include_directories(webgpu INTERFACE
+  #   "${CMAKE_CURRENT_SOURCE_DIR}/include-emscripten"
+  # )
 
-  target_include_directories(webgpu INTERFACE
-    "${CMAKE_CURRENT_SOURCE_DIR}/include-emscripten"
-  )
-
-  # This is used to advertise the flavor of WebGPU that this zip provides
-  target_compile_definitions(webgpu INTERFACE WEBGPU_BACKEND_EMSCRIPTEN)
+  # # This is used to advertise the flavor of WebGPU that this zip provides
+  # target_compile_definitions(webgpu INTERFACE WEBGPU_BACKEND_EMSCRIPTEN)
 
 else (EMSCRIPTEN)
   set(DAWN_FETCH_DIR "${CMAKE_CURRENT_LIST_DIR}/fetch-content")
@@ -36,7 +38,6 @@ else (EMSCRIPTEN)
 
   # Filter existing targets and add them to the library
   set(valid_types "STATIC_LIBRARY;MODULE_LIBRARY;SHARED_LIBRARY;OBJECT_LIBRARY;EXECUTABLE")
-
   set(dawn_objects)
   foreach(target IN LISTS AllDawnTargets)
     if (TARGET ${target})
@@ -51,7 +52,8 @@ else (EMSCRIPTEN)
 
   add_library(dawn STATIC ${dawn_objects})
 
-  set_target_properties(dawn PROPERTIES PUBLIC_HEADER "${dawn_header_files}")
+  # set install prefix
+  # set(CMAKE_INSTALL_PREFIX "/usr/local")
 
   install(TARGETS dawn
     RUNTIME DESTINATION bin
@@ -75,6 +77,12 @@ else (EMSCRIPTEN)
     DIRECTORY "${dawn_BINARY_DIR}/gen/include/"
     DESTINATION include/dawn-build/gen/include
     FILES_MATCHING PATTERN "*.h"
+  )
+
+  # Install the pkg-config file
+  configure_file(dawn.pc.in dawn.pc @ONLY)
+  install(FILES "${CMAKE_BINARY_DIR}/dawn.pc"
+    DESTINATION lib/pkgconfig
   )
 endif (EMSCRIPTEN)
 

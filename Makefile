@@ -1,7 +1,7 @@
 .PHONY: build
 
-# TYPE = release
-TYPE = debug
+TYPE = release
+# TYPE = debug
 
 build:
 	cmake --build build/$(TYPE) --target dawn
@@ -12,7 +12,7 @@ build-setup:
 		-GNinja \
 		-DCMAKE_C_COMPILER=clang \
 		-DCMAKE_CXX_COMPILER=clang++ \
-		-DCMAKE_COLOR_DIAGNOSTICS=ON
+		-DCMAKE_COLOR_DIAGNOSTICS=ON \
 	cmake . -B build/release \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-GNinja \
@@ -21,4 +21,4 @@ build-setup:
 		-DCMAKE_COLOR_DIAGNOSTICS=ON
 
 install:
-	cmake --install build/$(TYPE) --prefix $(prefix)
+	cmake --install build/$(TYPE)
