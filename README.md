@@ -15,7 +15,7 @@ make install
 find_package(PkgConfig)
 pkg_check_modules(Dawn REQUIRED IMPORTED_TARGET dawn)
 ...
-target_link_libraries(your_exec PRIVATE
+target_link_libraries(target_name PRIVATE
   PkgConfig::Dawn
 
   # OS independent libs might need to be linked
@@ -27,4 +27,7 @@ target_link_libraries(your_exec PRIVATE
   "-framework Metal"
 )
 
+target_include_directories(target_name PRIVATE
+  ${Dawn_INCLUDE_DIRS}
+)
 ```
