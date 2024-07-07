@@ -52,6 +52,12 @@ else (EMSCRIPTEN)
 
   add_library(dawn STATIC ${dawn_objects})
 
+  set(CMAKE_EXPORT_COMPILE_COMMANDS ON)
+
+  # target_link_libraries(dawn PRIVATE
+  #   -L/opt/homebrew/opt/llvm/lib/c++
+  # )
+
   # set install prefix
   # set(CMAKE_INSTALL_PREFIX "/usr/local")
 
@@ -62,27 +68,31 @@ else (EMSCRIPTEN)
   )
 
   install(
-    DIRECTORY "${DAWN_FETCH_DIR}/dawn-src/src/"
+    DIRECTORY "${DAWN_FETCH_DIR}/dawn-src/src"
     DESTINATION include/dawn-src/src
-    FILES_MATCHING PATTERN "*.h"
+    # FILES_MATCHING PATTERN "*.h"
   )
 
   install(
-    DIRECTORY "${DAWN_FETCH_DIR}/dawn-src/include/"
+    DIRECTORY "${DAWN_FETCH_DIR}/dawn-src/include"
     DESTINATION include/dawn-src/include
-    FILES_MATCHING PATTERN "*.h"
+    # FILES_MATCHING PATTERN "*.h"
   )
 
   install(
-    DIRECTORY "${dawn_BINARY_DIR}/gen/include/"
+    DIRECTORY "${dawn_BINARY_DIR}/gen/include"
     DESTINATION include/dawn-build/gen/include
-    FILES_MATCHING PATTERN "*.h"
+    # FILES_MATCHING PATTERN "*.h"
   )
 
   # Install the pkg-config file
   configure_file(dawn.pc.in dawn.pc @ONLY)
   install(FILES "${CMAKE_BINARY_DIR}/dawn.pc"
     DESTINATION lib/pkgconfig
+  )
+
+  install(FILES "${CMAKE_BINARY_DIR}/compile_commands.json"
+    DESTINATION share/dawn
   )
 endif (EMSCRIPTEN)
 

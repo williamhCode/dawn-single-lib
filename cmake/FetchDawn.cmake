@@ -162,5 +162,3 @@ endif ()
 #     set_property(TARGET ${Target} PROPERTY FOLDER "Dawn")
 #   endif()
 # endforeach()
-
-target_include_directories(dawn_utils PUBLIC "${DAWN_FETCH_DIR}/dawn-src/src")
