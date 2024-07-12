@@ -12,12 +12,18 @@ FetchContent_Declare(
   #GIT_SHALLOW ON
 
   # Manual download mode, even shallower than GIT_SHALLOW ON
+  # DOWNLOAD_COMMAND
+  #   mkdir -p ${DAWN_FETCH_DIR}/dawn-src &&
+  #   cd ${DAWN_FETCH_DIR}/dawn-src &&
+  #   git init &&
+  #   git fetch --depth=1 https://dawn.googlesource.com/dawn chromium/6500 &&
+  #   git reset --hard FETCH_HEAD
+
   DOWNLOAD_COMMAND
-    mkdir -p ${DAWN_FETCH_DIR}/dawn-src &&
-    cd ${DAWN_FETCH_DIR}/dawn-src &&
-    git init &&
-    git fetch --depth=1 https://dawn.googlesource.com/dawn chromium/6500 &&
-    git reset --hard FETCH_HEAD
+		cd ${FETCHCONTENT_BASE_DIR}/dawn-src &&
+		git init &&
+		git fetch --depth=1 https://dawn.googlesource.com/dawn chromium/6500 &&
+		git reset --hard FETCH_HEAD
 )
 
 FetchContent_GetProperties(dawn)
@@ -60,10 +66,9 @@ if (NOT dawn_POPULATED)
 
   set(TINT_BUILD_WGSL_READER ON)
 
-  # add_subdirectory(${dawn_SOURCE_DIR} ${dawn_BINARY_DIR})
+  add_subdirectory(${dawn_SOURCE_DIR} ${dawn_BINARY_DIR} EXCLUDE_FROM_ALL)
 
-  # custom source directory
-  add_subdirectory(${DAWN_FETCH_DIR}/dawn-src ${dawn_BINARY_DIR})
+  # add_subdirectory(${DAWN_FETCH_DIR}/dawn-src ${dawn_BINARY_DIR})
 endif ()
 
 # set(AllDawnTargets
