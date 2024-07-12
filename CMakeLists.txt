@@ -65,20 +65,17 @@ install(TARGETS dawn
 
 install(
   DIRECTORY "${dawn_SOURCE_DIR}/src"
-  DESTINATION include/dawn-src/src
-  # FILES_MATCHING PATTERN "*.h"
+  DESTINATION include/dawn-src
 )
 
 install(
   DIRECTORY "${dawn_SOURCE_DIR}/include"
-  DESTINATION include/dawn-src/include
-  # FILES_MATCHING PATTERN "*.h"
+  DESTINATION include/dawn-src
 )
 
 install(
   DIRECTORY "${dawn_BINARY_DIR}/gen/include"
-  DESTINATION include/dawn-build/gen/include
-  # FILES_MATCHING PATTERN "*.h"
+  DESTINATION include/dawn-build/gen
 )
 
 # Install the pkg-config file
