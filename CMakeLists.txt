@@ -64,13 +64,13 @@ install(TARGETS dawn
 )
 
 install(
-  DIRECTORY "${DAWN_FETCH_DIR}/dawn-src/src"
+  DIRECTORY "${dawn_SOURCE_DIR}/src"
   DESTINATION include/dawn-src/src
   # FILES_MATCHING PATTERN "*.h"
 )
 
 install(
-  DIRECTORY "${DAWN_FETCH_DIR}/dawn-src/include"
+  DIRECTORY "${dawn_SOURCE_DIR}/include"
   DESTINATION include/dawn-src/include
   # FILES_MATCHING PATTERN "*.h"
 )
