@@ -22,7 +22,6 @@ function(get_all_targets _result _dir)
 endfunction()
 
 
-# set(DAWN_FETCH_DIR "${PROJECT_SOURCE_DIR}/fetch-content")
 include(cmake/FetchDawn.cmake)
 
 get_all_targets(AllDawnTargets ${dawn_SOURCE_DIR})
@@ -45,19 +44,8 @@ endforeach()
 # print all dawn objects
 add_library(dawn STATIC ${dawn_objects})
 
-target_link_libraries(dawn PRIVATE
-  # -L/opt/homebrew/opt/llvm/lib/c++
-  # "-framework Cocoa"
-  # "-framework IOKit"
-  # "-framework IOSurface"
-  # "-framework QuartzCore"
-  # "-framework Metal"
-)
-
-# set install prefix
-# set(CMAKE_INSTALL_PREFIX "/usr/local")
-
 install(TARGETS dawn
+  EXPORT dawnTargets
   RUNTIME DESTINATION bin
   LIBRARY DESTINATION lib
   ARCHIVE DESTINATION lib
@@ -78,13 +66,30 @@ install(
   DESTINATION include/dawn-build/gen
 )
 
-# Install the pkg-config file
-configure_file(dawn.pc.in dawn.pc @ONLY)
-install(FILES "${CMAKE_BINARY_DIR}/dawn.pc"
-  DESTINATION lib/pkgconfig
+include(CMakePackageConfigHelpers)
+write_basic_package_version_file(
+  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfigVersion.cmake"
+  VERSION ${PROJECT_VERSION}
+  COMPATIBILITY AnyNewerVersion
 )
 
-# install(FILES "${CMAKE_BINARY_DIR}/compile_commands.json"
-#   DESTINATION share/dawn
-# )
+configure_file(dawnConfig.cmake.in
+  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfig.cmake" @ONLY
+)
 
+install(FILES
+  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfig.cmake"
+  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfigVersion.cmake"
+  DESTINATION lib/cmake/dawn
+)
+
+install(EXPORT dawnTargets
+  FILE dawnTargets.cmake
+  DESTINATION lib/cmake/dawn
+)
+
+# Install the pkg-config file
+# configure_file(dawn.pc.in dawn.pc @ONLY)
+# install(FILES "${CMAKE_BINARY_DIR}/dawn.pc"
+#   DESTINATION lib/pkgconfig
+# )

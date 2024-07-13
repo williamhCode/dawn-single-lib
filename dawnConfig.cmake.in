@@ -1,0 +1,12 @@
+@PACKAGE_INIT@
+
+set(Dawn_INCLUDE_DIRS "@CMAKE_INSTALL_PREFIX@/include/dawn-src/include;@CMAKE_INSTALL_PREFIX@/include/dawn-src/src;@CMAKE_INSTALL_PREFIX@/include/dawn-build/gen/include")
+set(Dawn_LIBRARIES dawn "-framework Cocoa" "-framework IOKit" "-framework IOSurface" "-framework QuartzCore" "-framework Metal")
+
+include(CMakeFindDependencyMacro)
+
+# If there are any dependencies, add find_dependency lines here
+# find_dependency(SomeDependency REQUIRED)
+
+include("${CMAKE_CURRENT_LIST_DIR}/dawnTargets.cmake")
+
