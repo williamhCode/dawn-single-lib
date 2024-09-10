@@ -1,7 +1,7 @@
 @PACKAGE_INIT@
 
-set(Dawn_INCLUDE_DIRS "@CMAKE_INSTALL_PREFIX@/include/dawn-src/include;@CMAKE_INSTALL_PREFIX@/include/dawn-src/src;@CMAKE_INSTALL_PREFIX@/include/dawn-build/gen/include")
-set(Dawn_LIBRARIES dawn "-framework Cocoa" "-framework IOKit" "-framework IOSurface" "-framework QuartzCore" "-framework Metal")
+set(dawn_INCLUDE_DIRS "@CMAKE_INSTALL_PREFIX@/include/dawn-src/include;@CMAKE_INSTALL_PREFIX@/include/dawn-src/src;@CMAKE_INSTALL_PREFIX@/include/dawn-build/gen/include")
+set(dawn_LIBRARIES dawn "-framework Cocoa" "-framework IOKit" "-framework IOSurface" "-framework QuartzCore" "-framework Metal")
 
 include(CMakeFindDependencyMacro)
 
