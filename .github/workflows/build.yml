@@ -7,7 +7,7 @@ permissions:
   contents: write
 
 jobs:
-  build:
+  build and upload release:
 
     runs-on: macos-14
 
