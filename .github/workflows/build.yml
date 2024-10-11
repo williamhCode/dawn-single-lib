@@ -2,6 +2,12 @@ name: Create Release
 
 on:
   workflow_dispatch:
+    inputs:
+      tag_name:
+        description: 'Tag name for release'
+  push:
+    tags:
+      - 'chromium/[0-9]+'
 
 permissions:
   contents: write
@@ -22,10 +28,10 @@ jobs:
        -DCMAKE_INSTALL_PREFIX=install
 
     - name: Build
-      run: 	cmake --build build --target dawn -- -j4
+      run:  cmake --build build --target dawn -- -j4
 
     - name: Install
-      run: 	cmake --install build
+      run:  cmake --install build
 
     - name: Upload to Releases
       run: |
