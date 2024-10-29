@@ -2,9 +2,6 @@ name: Create Release
 
 on:
   workflow_dispatch:
-    inputs:
-      tag_name:
-        description: 'Tag name for release'
   push:
     tags:
       - 'chromium/[0-9]+'
@@ -21,10 +18,10 @@ jobs:
     - uses: actions/checkout@v4
 
     - name: Build Setup
-      shell: bash
       run: >
        cmake . -B build
        -DCMAKE_BUILD_TYPE=RelWithDebInfo
+       -DCMAKE_OSX_ARCHITECTURES=x86_64;arm64
        -DCMAKE_INSTALL_PREFIX=install
 
     - name: Build
