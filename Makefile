@@ -7,8 +7,7 @@ build-setup:
 	cmake . -B build \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-GNinja \
-		-DCMAKE_C_COMPILER=clang \
-		-DCMAKE_CXX_COMPILER=clang++ \
+		-DCMAKE_OSX_ARCHNITECTURES="x86_64;arm64" \
 		-DCMAKE_C_COMPILER_LAUNCHER=ccache \
 		-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
 		-DCMAKE_COLOR_DIAGNOSTICS=ON
