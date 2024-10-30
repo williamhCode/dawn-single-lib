@@ -31,8 +31,9 @@ jobs:
 
     - name: Upload to Releases
       run: |
-        tar -czvf dawn-osx-universal-relwithdebinfo+assert.tar.gz install/Debug
-        tar -czvf dawn-osx-universal-release.tar.gz install/Release
+        cd install
+        tar -czvf dawn-osx-universal-relwithdebinfo+assert.tar.gz Debug
+        tar -czvf dawn-osx-universal-release.tar.gz Release
         gh release create ${{ github.ref_name }} --generate-notes ./dawn-osx-universal-relwithdebinfo+assert.tar.gz ./dawn-osx-universal-release.tar.gz
       env: 
         GITHUB_TOKEN: ${{ github.TOKEN }}
