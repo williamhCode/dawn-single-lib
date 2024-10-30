@@ -1,19 +1,21 @@
-.PHONY: build
-
 build:
-	cmake --build build --target dawn
+	cmake --build out/Debug --target dawn
+	cmake --build out/Release --target dawn
 
 build-setup:
-	cmake . -B build \
+	cmake . -B out/Debug \
 		-DCMAKE_BUILD_TYPE=RelWithDebInfo \
 		-GNinja \
+		-DDAWN_ALWAYS_ASSERT=ON \
 		-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
-		-DCMAKE_C_COMPILER_LAUNCHER=ccache \
-		-DCMAKE_CXX_COMPILER_LAUNCHER=ccache \
 		-DCMAKE_COLOR_DIAGNOSTICS=ON
 
-clean:
-	cmake --build build --target clean
+	cmake . -B out/Release \
+		-DCMAKE_BUILD_TYPE=Release \
+		-GNinja \
+		-DCMAKE_OSX_ARCHITECTURES="x86_64;arm64" \
+		-DCMAKE_COLOR_DIAGNOSTICS=ON
 
 install:
-	cmake --install build
+	cmake --install out/Debug --prefix install/Debug
+	cmake --install out/Release --prefix install/Release

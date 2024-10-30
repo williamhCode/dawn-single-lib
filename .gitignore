@@ -1,5 +1,4 @@
-build/
-build-em/
+out/
 install/
-fetch-content/
-
+dawn-src/
+*.tar.gz

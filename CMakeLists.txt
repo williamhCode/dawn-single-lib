@@ -1,98 +1,41 @@
-cmake_minimum_required(VERSION 3.0.0...3.24 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.28 FATAL_ERROR)
 
 set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OS X deployment version")
 
-project(DawnSingleLib
-  DESCRIPTION "Builds Dawn as a single static lib"
-  VERSION 0.0.1
+project(
+  BuildDawn
+  VERSION 0.1.0
+  LANGUAGES CXX
 )
 
-message(STATUS "Using Dawn backend for WebGPU")
+include(FetchContent)
 
-# Collect all currently added targets in all subdirectories
-#
-# Parameters:
-# - _result the list containing all found targets
-# - _dir root directory to start looking from
-function(get_all_targets _result _dir)
-    get_property(_subdirs DIRECTORY "${_dir}" PROPERTY SUBDIRECTORIES)
-    foreach(_subdir IN LISTS _subdirs)
-        get_all_targets(${_result} "${_subdir}")
-    endforeach()
+FetchContent_Declare(
+  dawn
+  #GIT_REPOSITORY https://dawn.googlesource.com/dawn
+  #GIT_TAG        chromium/6800
+  #GIT_SHALLOW ON
 
-    get_directory_property(_sub_targets DIRECTORY "${_dir}" BUILDSYSTEM_TARGETS)
-    set(${_result} ${${_result}} ${_sub_targets} PARENT_SCOPE)
-endfunction()
+  DOWNLOAD_COMMAND
+    cd ${PROJECT_SOURCE_DIR}/dawn-src &&
+		git init &&
+		git fetch --depth=1 https://dawn.googlesource.com/dawn chromium/6800 &&
+		git reset --hard FETCH_HEAD
 
-
-include(cmake/FetchDawn.cmake)
-
-get_all_targets(AllDawnTargets ${dawn_SOURCE_DIR})
-set(valid_types "STATIC_LIBRARY;MODULE_LIBRARY;SHARED_LIBRARY;OBJECT_LIBRARY;EXECUTABLE")
-set(dawn_objects)
-foreach(target IN LISTS AllDawnTargets)
-  if (TARGET ${target})
-    get_target_property(target_type ${target} TYPE)
-    if (${target_type} IN_LIST valid_types)
-      # message(STATUS "Adding target ${target} with ${target_type} to dawn_objects")
-      message(STATUS "${target} : ${target_type}")
-      list(APPEND dawn_objects $<TARGET_OBJECTS:${target}>)
-    else()
-      # message(STATUS "Skipping target ${target} with ${target_type}")
-      message(STATUS "${target} ! ${target_type}")
-    endif()
-  endif()
-endforeach()
-
-# print all dawn objects
-add_library(dawn STATIC ${dawn_objects})
-
-install(TARGETS dawn
-  EXPORT dawnTargets
-  RUNTIME DESTINATION bin
-  LIBRARY DESTINATION lib
-  ARCHIVE DESTINATION lib
+  SOURCE_DIR ${PROJECT_SOURCE_DIR}/dawn-src
 )
 
-install(
-  DIRECTORY "${dawn_SOURCE_DIR}/src"
-  DESTINATION include/dawn-src
-)
+set(DAWN_FETCH_DEPENDENCIES ON)
+set(DAWN_ENABLE_INSTALL ON)
 
-install(
-  DIRECTORY "${dawn_SOURCE_DIR}/include"
-  DESTINATION include/dawn-src
-)
+set(DAWN_ENABLE_VULKAN ${USE_VULKAN})
+set(TINT_BUILD_SPV_READER OFF)
 
-install(
-  DIRECTORY "${dawn_BINARY_DIR}/gen/include"
-  DESTINATION include/dawn-build/gen
-)
+set(DAWN_BUILD_SAMPLES OFF)
+set(TINT_BUILD_TESTS OFF)
 
-include(CMakePackageConfigHelpers)
-write_basic_package_version_file(
-  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfigVersion.cmake"
-  VERSION ${PROJECT_VERSION}
-  COMPATIBILITY AnyNewerVersion
-)
+set(TINT_BUILD_CMD_TOOLS ON)
 
-configure_file(dawnConfig.cmake.in
-  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfig.cmake" @ONLY
-)
+FetchContent_MakeAvailable(dawn)
 
-install(FILES
-  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfig.cmake"
-  "${CMAKE_CURRENT_BINARY_DIR}/dawnConfigVersion.cmake"
-  DESTINATION lib/cmake/dawn
-)
-
-install(EXPORT dawnTargets
-  FILE dawnTargets.cmake
-  DESTINATION lib/cmake/dawn
-)
-
-# Install the pkg-config file
-# configure_file(dawn.pc.in dawn.pc @ONLY)
-# install(FILES "${CMAKE_BINARY_DIR}/dawn.pc"
-#   DESTINATION lib/pkgconfig
-# )
+add_custom_target(dawn DEPENDS dawn::webgpu_dawn)

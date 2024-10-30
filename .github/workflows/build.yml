@@ -1,4 +1,4 @@
-name: Create Release
+name: Build Artifacts and Upload To Release
 
 on:
   workflow_dispatch:
@@ -17,22 +17,22 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
+    - name: install Ninja
+      run: brew install ninja
+
     - name: Build Setup
-      run: >
-       cmake . -B build
-       -DCMAKE_BUILD_TYPE=RelWithDebInfo
-       -DCMAKE_OSX_ARCHITECTURES="x86_64;arm64"
-       -DCMAKE_INSTALL_PREFIX=install
+      run: make build-setup
 
     - name: Build
-      run:  cmake --build build --target dawn -- -j4
+      run:  make build
 
     - name: Install
-      run:  cmake --install build
+      run:  make install
 
     - name: Upload to Releases
       run: |
-        tar -czvf dawn-osx-arm.tar.gz install
-        gh release create ${{ github.ref_name }} --generate-notes ./dawn-osx-arm.tar.gz
+        tar -czvf dawn-osx-universal-relwithdebinfo+assert.tar.gz install/Debug
+        tar -czvf dawn-osx-universal-release.tar.gz install/Release
+        gh release create ${{ github.ref_name }} --generate-notes ./dawn-osx-universal-relwithdebinfo+assert.tar.gz ./dawn-osx-universal-release.tar.gz
       env: 
         GITHUB_TOKEN: ${{ github.TOKEN }}
