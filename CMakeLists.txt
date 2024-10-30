@@ -1,4 +1,7 @@
 cmake_minimum_required(VERSION 3.0.0...3.24 FATAL_ERROR)
+
+set(CMAKE_OSX_DEPLOYMENT_TARGET "11.0" CACHE STRING "Minimum OS X deployment version")
+
 project(DawnSingleLib
   DESCRIPTION "Builds Dawn as a single static lib"
   VERSION 0.0.1
