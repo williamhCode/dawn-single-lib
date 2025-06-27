@@ -12,14 +12,11 @@ include(FetchContent)
 
 FetchContent_Declare(
   dawn
-  #GIT_REPOSITORY https://dawn.googlesource.com/dawn
-  #GIT_TAG        chromium/6800
-  #GIT_SHALLOW ON
 
   DOWNLOAD_COMMAND
     cd ${PROJECT_SOURCE_DIR}/dawn-src &&
 		git init &&
-		git fetch --depth=1 https://dawn.googlesource.com/dawn chromium/6800 &&
+		git fetch --depth=1 https://dawn.googlesource.com/dawn chromium/7262 &&
 		git reset --hard FETCH_HEAD
 
   SOURCE_DIR ${PROJECT_SOURCE_DIR}/dawn-src
